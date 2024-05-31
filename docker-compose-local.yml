@@ -1,6 +1,6 @@
 version: '3.7'
 services:
-  gcp-cloud-run-template-api-local:
+  gcp-datastore-lookup-api-local:
     build:
       context: .
       target: dev
@@ -8,7 +8,7 @@ services:
 #    dns:
 #      - 100.64.0.1 #/etc/resolv.conf
 #      - #IP ADDRESS HERE
-    container_name: gcp-cloud-run-template-api-dev-local
+    container_name: gcp-datastore-lookup-api-dev-local
     environment:
       - GCP_PROJECT_ID=dummy-project
       - GOOGLE_CLOUD_PROJECT=dummy-project

@@ -1,13 +1,11 @@
 
-# GCP Cloud Template API
-This repository is a templated web service which can be deployed as a Cloud Run service on GCP.
-It can be used as a REST API for consumers or as a PubSub subscriber. It is based on the FastAPI framework, 
-and has the ability to use Pydantic models for request and response validation, as well as the Open API Specification for consumer endpoints.
+# GCP Datastore Lookup API
+This repository is designed as a Cloud Run Service which retrieves 1+ entities from a specified Datastore cache 
 
 # Local Development
 ### 1. Build and Run Local Test
 ```commandline
-docker-compose -f docker-compose-local.yml build gcp-cloud-run-template-api-local && docker-compose -f docker-compose-local.yml up gcp-cloud-run-template-api-local
+docker-compose -f docker-compose-local.yml build gcp-datastore-lookup-api-local && docker-compose -f docker-compose-local.yml up gcp-datastore-lookup-api-local
 ```
 **_NOTE:_**  There is a postman collection in the repo which can be used to test the endpoints, but 
 you need to add your IP address in to the compose file for it to work
@@ -21,19 +19,19 @@ docker-compose -f docker-compose.yml up --build
 #### Integration Tests
 With the Docker Compose dev instance running:
 ```commandline
-docker exec gcp-cloud-run-template-api-dev /bin/sh -c "poetry run pytest /home/appuser/tests/integration_tests/"
+docker exec gcp-datastore-lookup-api-dev /bin/sh -c "poetry run pytest /home/appuser/tests/integration_tests/"
 ```
 
 #### Unit Tests
 With the Docker Compose dev instance running:
 ```commandline
-docker exec gcp-cloud-run-template-api-dev /bin/sh -c "poetry run pytest /home/appuser/tests/unit_tests/"
+docker exec gcp-datastore-lookup-api-dev /bin/sh -c "poetry run pytest /home/appuser/tests/unit_tests/"
 ```
 
 #### Deploy to GCP Dev
 For actually deploying to the dev environment
 ```
-gcloud run deploy gcp-cloud-run-template-api-<your-name> \
+gcloud run deploy gcp-datastore-lookup-api-<your-name> \
  --image europe-west2-docker.pkg.dev/<GAR_NAME>:<VERSION_NUMBER> \
  --platform managed \
  --project <PROJECT_ID> \
@@ -53,5 +51,5 @@ gcloud run deploy gcp-cloud-run-template-api-<your-name> \
 ```
 ### API Model Updates
 ```commandline
-datamodel-codegen  --input openapi/gcp_cloud_run_template_api.yaml --output src/pydantic_model/api_model.py
+datamodel-codegen  --input openapi/gcp_datastore_lookup_api.yaml --output src/pydantic_model/api_model.py
 ```

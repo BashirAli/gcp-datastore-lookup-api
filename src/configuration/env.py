@@ -6,7 +6,7 @@ from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
     gcp_project_id: str = Field(..., alias="GCP_PROJECT_ID")
-    api_name: str = "gcp-cloud-run-template-api"
+    api_name: str = "gcp-datastore-lookup-api"
     target_project_id: str = Field(..., json_schema_extra={"env": "TARGET_PROJECT_ID"})
     target_bucket: str = Field(
         ..., json_schema_extra={"env": "TARGET_BUCKET_NAME"}

@@ -1,0 +1,195 @@
+openapi: 3.0.0
+info:  
+  title: Datastore Cloud Run API
+  description: This is an API designed to access Datastore and return data at low latency
+  contact:
+    name: "Bashir Ali"
+    email: "thebashtm@gmail.com"
+  version: 1.0.0
+
+paths:
+  /v1/get_entity:
+    post:
+      tags:
+        - DatastoreGet
+      operationId: Datastore
+      parameters:
+        - in: header
+          name: API-RequestTimestamp
+          description: request timestamp (yyyy-mm-ddThh:mm:ssZ)
+          required: true
+          schema:
+            type: string
+            format: date-time
+          example: ' 2024-04-25T11:11:55Z'
+
+        - in: header
+          name:  API-RequestID
+          description: Unique request identifier
+          required: true
+          schema:
+            type: string
+          example: 'skbd-jfiuy34-dsJFkjnwer23'
+
+      requestBody:
+        $ref: '#/components/requestBodies/DatastoreEntityRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/DatastoreEntityResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestException'
+        '404':
+          $ref: '#/components/responses/NotFoundException'
+        '500':
+          $ref: '#/components/responses/InternalException'
+  /v1/get_entities:
+    post:
+      tags:
+        - DatastoreGet
+      operationId: DatastoreMultiple
+      parameters:
+        - in: header
+          name: API-RequestTimestamp
+          description: request timestamp (yyyy-mm-ddThh:mm:ssZ)
+          required: true
+          schema:
+            type: string
+            format: date-time
+          example: ' 2024-04-25T11:11:55Z'
+
+        - in: header
+          name:  API-RequestID
+          description: Unique request identifier
+          required: true
+          schema:
+            type: string
+          example: 'skbd-jfiuy34-dsJFkjnwer23'
+
+      requestBody:
+        $ref: '#/components/requestBodies/DatastoreEntityMultipleRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/DatastoreEntityMultipleResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestException'
+        '404':
+          $ref: '#/components/responses/NotFoundException'
+        '500':
+          $ref: '#/components/responses/InternalException'
+
+components:
+  requestBodies:
+    DatastoreEntityRequest:
+      description: Datastore Entity Request
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DatastoreEntityRequest'
+          examples:
+            datastore_kind:
+              summary: Reference to datastore kind
+              value:
+                datastore_kind: test_kind
+
+    DatastoreEntityMultipleRequest:
+      description: Datastore Entity Multiple Request
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DatastoreEntityMultipleRequest'
+          examples:
+            datastore_kind:
+              summary: Reference to datastore kind
+              value:
+                datastore_kind: test_kind
+
+  responses:
+    DatastoreEntityResponse:
+      description: Fetch entity data
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DatastoreEntityResponse'
+    DatastoreEntityMultipleResponse:
+      description: Fetch entity data multiple results
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DatastoreEntityMultipleResponse'
+
+    BadRequestException:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            Invalid Body:
+              value:
+                exception: 'Validation Error Occurred'
+                detail: "Body has no data"
+
+    NotFoundException:
+      description: Results not found exception
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            NotFound Error:
+              value:
+                exception: NotFound Exception
+                detail: "Entity not found using provided key"
+    InternalException:
+      description: Internal Exception
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            InternalException Error:
+              value:
+                exception: "Internal Exception Occurred"
+                detail: "Something went wrong"
+
+  schemas:
+    DatastoreEntityRequest:
+      type: object
+      properties:
+        datastore_key:
+          type: string
+          example: "192837465"
+    DatastoreEntityMultipleRequest:
+      type: object
+      properties:
+        datastore_key:
+          type: string
+          example: "192837465"
+    DatastoreEntityResponse:
+      type: object
+      properties:
+        json_string_response_entity:
+          type: string
+          example: "{'id': 'x', 'insertion_timestamp': ' 2024-04-25T11:11:55Z'}"
+    DatastoreEntityMultipleResponse:
+      type: array
+      items:
+        type: object
+        properties:
+        json_string_response_entity:
+          type: string
+          example: "{'id': 'x', 'insertion_timestamp': ' 2024-04-25T11:11:55Z'}"
+
+    ErrorResponse:
+      type: object
+      required:
+        - exception
+      properties:
+        exception:
+          type: string
+          description: exception
+        error_class:
+          type: string
+          description: error message

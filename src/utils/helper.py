@@ -18,63 +18,14 @@ from service.logger import LoggerAdapter, configure_logger
 
 logger = LoggerAdapter(configure_logger(), None)
 
+def deduplicate_entities(data):
 
-def decode_pubsub_message_data(data, strict=True) -> str:
-    try:
-        return base64.b64decode(data).decode("utf-8").strip()
-    except TypeError as te:
-        if isinstance(data, dict):
-            logger.info(f"PubSub message data was not encoded.")
-            return json.dumps(data)
-        elif not strict:
-            return json.dumps(data)
-        else:
-            raise MessageDecodeError(
-                f"Unknown DataType for PubSub message data - unable to decode. {te}"
-            )
-    except binascii.Error as be:
-        raise MessageDecodeError(f"Pubsub Message Data Base64 error: {be}")
-    except UnicodeDecodeError as ude:
-        raise MessageDecodeError(f"Pubsub Message Data Decoding error: {ude}")
-
+    return []
 
 def read_validate_message_data(request):
-    try:
-        message_data = CloudStorageEvent(
-            **json.loads(decode_pubsub_message_data(request.message.data))
-        )
-        logger.info(f"Data Decoded {message_data.model_dump()}")
-        return message_data
-    except json.decoder.JSONDecodeError as jse:
-        logger.error(msg=dict(exception=str(jse.msg)))
-        raise DeadLetterQueueError(
-            original_message=logger_config.context.get().get("original_message"),
-            error_description=str(jse.msg),
-            error_stage=ErrorStage.MESSAGE_VALIDATION,
-        )
-    except MessageValidationError as mve:
-        logger.error(msg=dict(exception=str(mve)))
-        raise DeadLetterQueueError(
-            original_message=logger_config.context.get().get("original_message"),
-            error_description=str(mve),
-            error_stage=ErrorStage.MESSAGE_VALIDATION,
-        )
-    except ValidationError as ve:
-        logger.error(logger_config.context.get().get("original_message"))
-        validation_exception = create_validation_error_str_message(str(ve))
-        logger.error(msg=dict(exception=str(validation_exception)))
-        raise DeadLetterQueueError(
-            original_message=logger_config.context.get().get("original_message"),
-            error_description=validation_exception,
-            error_stage=ErrorStage.MESSAGE_VALIDATION,
-        )
+    pass
 
 
-
-def remove_gpg_file_extension(gpg_file_extension_string):
-    if ".gpg" in gpg_file_extension_string:
-        return gpg_file_extension_string.replace(".gpg", "")
-    return gpg_file_extension_string
 
 
 def extract_trace_and_request_type(original_request: Request) -> dict:
