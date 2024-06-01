@@ -161,6 +161,9 @@ components:
         datastore_namespace:
           type: string
           example: "customer_store"
+        datastore_kind:
+          type: string
+          example: "customer_data_latest_apr"
         datastore_query:
           type: string
           example: "{'account_id': 'x', 'postcode': 'AB1 CD2', 'first_name': 'John'}"
@@ -170,6 +173,9 @@ components:
         datastore_namespace:
           type: string
           example: "customer_store"
+        datastore_kind:
+          type: string
+          example: "customer_data_latest_apr"
         datastore_query:
           type: string
           example: "{'account_id': 'x', 'postcode': 'AB1 CD2', 'first_name': 'John'}"
