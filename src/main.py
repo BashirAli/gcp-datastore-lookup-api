@@ -36,8 +36,7 @@ async def get_entity(request: DatastoreEntityRequest):
     #TODO VALIDATE JSON
 
 
-    entity_response = get_single_ds_entry()
-    # turn entity in to string dict
+    entity_response = get_single_ds_entry(request_body["datastore_namespace"], request_body["datastore_kind"], request_body["datastore_query"])
 
     return entity_response
 
@@ -53,7 +52,7 @@ async def get_entities(request: DatastoreEntityRequest):
 
     #TODO VALIDATE JSON
 
-    entity_response = get_multiple_ds_entries()
+    entity_response = get_multiple_ds_entries(request_body["datastore_namespace"], request_body["datastore_kind"], json.loads(request_body["datastore_query"]))
     # turn list of entities in to list of string dict
 
 

@@ -39,9 +39,9 @@ paths:
         '400':
           $ref: '#/components/responses/BadRequestException'
         '404':
-          $ref: '#/components/responses/NotFoundException'
+          $ref: '#/components/responses/DatastoreNotFoundException'
         '500':
-          $ref: '#/components/responses/InternalException'
+          $ref: '#/components/responses/InternalAPIException'
   /v1/get_entities:
     post:
       tags:
@@ -73,9 +73,9 @@ paths:
         '400':
           $ref: '#/components/responses/BadRequestException'
         '404':
-          $ref: '#/components/responses/NotFoundException'
+          $ref: '#/components/responses/DatastoreNotFoundException'
         '500':
-          $ref: '#/components/responses/InternalException'
+          $ref: '#/components/responses/InternalAPIException'
 
 components:
   requestBodies:
@@ -165,8 +165,8 @@ components:
           type: string
           example: "customer_data_latest_apr"
         datastore_query:
-          type: string
-          example: "{'account_id': 'x', 'postcode': 'AB1 CD2', 'first_name': 'John'}"
+          type: object
+          additionalProperties: {}
     DatastoreEntityMultipleRequest:
       type: object
       properties:
@@ -177,22 +177,22 @@ components:
           type: string
           example: "customer_data_latest_apr"
         datastore_query:
-          type: string
-          example: "{'account_id': 'x', 'postcode': 'AB1 CD2', 'first_name': 'John'}"
+          type: object
+          additionalProperties: {}
     DatastoreEntityResponse:
       type: object
       properties:
-        json_string_response_entity:
-          type: string
-          example: "{'account_id': 'x', 'insertion_timestamp': '2024-04-25T11:11:55Z'}"
+        entity:
+          type: object
+          additionalProperties: {}
     DatastoreEntityMultipleResponse:
       type: array
       items:
         type: object
         properties:
-        json_string_response_entity:
-          type: string
-          example: "{'account_id': 'x', 'insertion_timestamp': '2024-04-25T11:11:55Z'}"
+        entity:
+          type: object
+          additionalProperties: {}
 
     ErrorResponse:
       type: object
