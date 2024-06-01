@@ -8,18 +8,17 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
 from core.request import get_single_ds_entry, get_multiple_ds_entries
-from configuration.settings import settings
+from configuration.env import settings
 from error.custom_exceptions import (
     InternalAPIException,
     DatastoreGenericError,
     DatastoreNotFoundException,
-    ValidationError,
     ModelValidationError,
     DatastoreMultiResultException,
     InternalAPIException )
 
 app = FastAPI(
-    title=settings.project_name,
+    title=settings.api_name,
 )
 @app.get("/health")
 def health_check():
@@ -64,7 +63,7 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
     logger.error(msg="RequestValidation Error Occurred")
     validation_exception = create_header_validation_error_message(exc.errors())
     http_response = ErrorResponse(exception="Request Validation Error Occurred", detail=validation_exception)
-    http_response_dict = http_response.dict(exclude_none=True)
+    http_response_dict = http_response.model_dump(exclude_none=True)
     logger.info(msg=http_response_dict)
     return JSONResponse(
         status_code=status.HTTP_400_BAD_REQUEST,
@@ -77,7 +76,7 @@ async def validation_exception_handler(request: Request, exc: ModelValidationErr
     logger.error(msg="ModelValidation Error Occurred")
     validation_exception = create_validation_error_message(str(exc))
     http_response = ErrorResponse(exception="Request Validation Error Occurred", detail=validation_exception)
-    http_response_dict = http_response.dict(exclude_none=True)
+    http_response_dict = http_response.model_dump(exclude_none=True)
     logger.info(msg=http_response_dict)
     return JSONResponse(
         status_code=status.HTTP_400_BAD_REQUEST,
@@ -89,7 +88,7 @@ async def validation_exception_handler(request: Request, exc: ModelValidationErr
 async def validation_exception_handler(request: Request, exc: DatastoreGenericError):
     logger.error(msg="DatastoreGeneric Error Occurred")
     http_response = ErrorResponse(exception="Datastore Error", detail=str(exc))
-    http_response_dict = http_response.dict(exclude_none=True)
+    http_response_dict = http_response.model_dump(exclude_none=True)
     logger.info(msg=http_response_dict)
     return JSONResponse(
         status_code=status.HTTP_400_BAD_REQUEST,
@@ -101,7 +100,7 @@ async def validation_exception_handler(request: Request, exc: DatastoreGenericEr
 async def validation_exception_handler(request: Request, exc: DatastoreNotFoundException):
     logger.error(msg="DatastoreNotFound Error Occurred")
     http_response = ErrorResponse(errorCode="1001", exception="NotFound Error", detail=str(exc))
-    http_response_dict = http_response.dict(exclude_none=True)
+    http_response_dict = http_response.model_dump(exclude_none=True)
     logger.info(msg=http_response_dict)
     return JSONResponse(
         status_code=status.HTTP_404_NOT_FOUND,
@@ -113,7 +112,7 @@ async def validation_exception_handler(request: Request, exc: DatastoreNotFoundE
 async def validation_exception_handler(request: Request, exc: DatastoreMultiResultException):
     logger.error(msg="DatastoreMultiResult Exception Occurred")
     http_response = ErrorResponse(errorCode="2001", exception="Multi Search Results Error", detail=str(exc))
-    http_response_dict = http_response.dict(exclude_none=True)
+    http_response_dict = http_response.model_dump(exclude_none=True)
     logger.info(msg=http_response_dict)
     return JSONResponse(
         status_code=status.HTTP_400_BAD_REQUEST,
@@ -126,7 +125,7 @@ async def validation_exception_handler(request: Request, exc: InternalAPIExcepti
     # Log the actual error but return a generic response to the consumer
     logger.error(msg=f"InternalAPI Exception Occurred: {str(exc)}")
     http_response = ErrorResponse(exception="Internal Error Occurred", detail="Internal Error Occurred")
-    http_response_dict = http_response.dict(exclude_none=True)
+    http_response_dict = http_response.model_dump(exclude_none=True)
     logger.info(msg=http_response_dict)
     return JSONResponse(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,

@@ -1,7 +1,7 @@
 from pydantic_model.api_model import Message
 
 class DatastoreGenericError(Exception):
-    """User Defined Exception for Customer Data fetched from Datastore
+    """Custom Exception for generic issues when data fetched from Datastore
 
     Args:
         Exception ([type]): [description]
@@ -9,14 +9,14 @@ class DatastoreGenericError(Exception):
 
 
 class DatastoreNotFoundException(Exception):
-    """User Defined Exception for Customer Data fetched from Datastore
+    """Custom Exception for data not found when fetched from Datastore
 
         Args:
             Exception ([type]): [description]
         """
 
 class ModelValidationError(Exception):
-    """User Defined Exception for Customer Data fetched from Datastore
+    """Custom Exception for Pydantic Model Validation
 
     Args:
         Exception ([type]): [description]
@@ -25,7 +25,7 @@ class ModelValidationError(Exception):
 
 
 class DatastoreMultiResultException(Exception):
-    """User Defined Exception for Customer Data fetched from Datastore
+    """Custom Exception for multiple entities fetched from Datastore
 
     Args:
         Exception ([type]): [description]
@@ -33,7 +33,7 @@ class DatastoreMultiResultException(Exception):
 
 
 class InternalAPIException(Exception):
-    """User Defined Exception for Internal app exceptions
+    """Custom Exception for Internal api exceptions
 
     Args:
         Exception ([type]): [description]

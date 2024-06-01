@@ -8,16 +8,6 @@ from main import app
 from google.cloud import datastore
 
 
-from utils.cloud_storage_utils import CloudStorageUtils
-from utils.pubsub_utils import PubSubUtils
-
-TEST_GCS_FILE_PATH = "/home/appuser/tests/integration_tests/api/data/test_gcs_upload_file.json"
-####TODO ADD MORE USECASES IN HERE WHEN MORE IMPLEMENTATION IS DEVELOPED
-TEST_CONSUMER_ENDPOINT_USE_CASES= "/home/appuser/tests/integration_tests/api/data/test_consumer_endpoint.json"
-
-DESTINATION_BLOB_NAME = "test/2024/05/31/test_file.json"
-
-
 @pytest.fixture
 def consumer_example_payloads():
     with open(TEST_CONSUMER_ENDPOINT_USE_CASES, "r") as f:

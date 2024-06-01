@@ -1,5 +1,5 @@
 from database import DatastoreClient
-from helpers.utility import deduplicate_entities
+from utils.helper import deduplicate_entities
 
 def get_single_ds_entry( datastore_namespace, datastore_kind, request, pydantic_validation_model):
     datastore = DatastoreClient(datastore_namespace, datastore_kind)

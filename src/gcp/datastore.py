@@ -20,8 +20,8 @@ def get_entity(kind: str, filters: dict) -> datastore.entity:
         result = list(query.fetch(limit=100))
 
     except BadRequest as e:
-        raise DatastoreError(f"Bad request: {e}")
+        raise DatastoreGenericError(f"Bad request: {e}")
     except ServiceUnavailable as e:
-        raise InternalException(f"Service Unavailable: {e}")
+        raise InternalAPIException(f"Service Unavailable: {e}")
 
     return result

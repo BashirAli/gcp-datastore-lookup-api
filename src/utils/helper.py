@@ -26,31 +26,16 @@ def read_validate_message_data(request):
     pass
 
 
-
-
-def extract_trace_and_request_type(original_request: Request) -> dict:
-    ctx_required_fields = {}
-    # X-Cloud-Trace-Context is for GCP tracing to work
-    trace_header = original_request.headers.get("X-Cloud-Trace-Context")
-    if trace_header and settings.gcp_project_id:
-        trace = trace_header.split("/")
-        ctx_required_fields[
-            "logging.googleapis.com/trace"
-        ] = f"projects/{settings.gcp_project_id}/traces/{trace[0]}"
-
-    ctx_required_fields["requestType"] = original_request.scope["path"]
-    return ctx_required_fields
-
-def create_validation_error_list_message(pydantic_exception: Sequence) -> str:
-    validation_exceptions = []
+def format_pydantic_validation_error_message(pydantic_exception: Sequence) -> str:
+    exceptions_list = []
     for exception in pydantic_exception:
         parameter = exception["loc"][-1]
         message = exception["msg"]
-        validation_exceptions.append({"parameter": parameter, "reason": message})
-    return f"The following request parameters failed validation: {str(validation_exceptions)}"
+        exceptions_list.append({"parameter": parameter, "reason": message})
+    return f"The following request parameters failed validation: {str(exceptions_list)}"
 
-def create_validation_error_str_message(pydantic_exception: str) -> str:
-    validation_exceptions = []
+def create_pydantic_validation_error_message(pydantic_exception: str) -> str:
+    exceptions_list = []
     pydantic_exception = pydantic_exception.split("\n")
     pydantic_exception.pop(0)
     # exceptions come in pairs, if the length is an odd number then there is unneeded metadata that can be discarded
@@ -58,10 +43,10 @@ def create_validation_error_str_message(pydantic_exception: str) -> str:
         pydantic_exception.pop()
 
     for i in range(0, len(pydantic_exception), 2):
-        validation_exceptions.append(
+        exceptions_list.append(
             (pydantic_exception[i], pydantic_exception[i + 1].strip())
         )
 
     return (
-        f"The following request parameters failed validation: {validation_exceptions}"
+        f"The following request parameters failed validation: {exceptions_list}"
     )

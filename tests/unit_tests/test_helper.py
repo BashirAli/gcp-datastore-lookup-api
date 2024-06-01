@@ -8,8 +8,8 @@ import pytest
 from error.custom_exceptions import DeadLetterQueueError, MessageDecodeError
 from pydantic_model.api_model import CloudStorageEvent, Message, PubSubMessage
 from utils.helper import (
-    create_validation_error_list_message,
-    create_validation_error_str_message,
+    format_pydantic_validation_error_message,
+    create_pydantic_validation_error_message,
     decode_pubsub_message_data,
     extract_trace_and_request_type,
     read_validate_message_data,
@@ -87,14 +87,14 @@ def test_decode_pubsub_message_data_unicode_decode_error():
     assert str(ex.value) == "Pubsub Message Data Base64 error: Incorrect padding"
 
 
-def test_create_validation_error_str_message():
+def test_create_pydantic_validation_error_message():
     message = (
         "1 validation error for IngestionData\ntarget_message_uuid\nField required "
         "[type=missing, input_value={'verint_table_name': 'wf...41.c000.snappy.parquet'}, "
         "input_type=dict]\nFor further information visit https://errors.pydantic.dev/2.3/v/missing"
     )
 
-    result = create_validation_error_str_message(message)
+    result = create_pydantic_validation_error_message(message)
 
     assert result == (
         "The following request parameters failed validation: [('target_message_uuid', "
@@ -103,7 +103,7 @@ def test_create_validation_error_str_message():
     )
 
 
-def test_create_validation_error_list_message():
+def test_format_pydantic_validation_error_message():
     test_data = [
         {
             "type": "missing",
@@ -118,7 +118,7 @@ def test_create_validation_error_list_message():
             "url": "https://errors.pydantic.dev/2.3/v/missing",
         }
     ]
-    result = create_validation_error_list_message(test_data)
+    result = format_pydantic_validation_error_message(test_data)
     assert result == (
         "The following request parameters failed validation: "
         "[{'parameter': 'publish_time', 'reason': 'Field required'}]"

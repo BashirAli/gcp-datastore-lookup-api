@@ -16,9 +16,6 @@ services:
       - PORT=8000
       - PYTHONPATH=/home/appuser/src:/home/appuser/tests
       - ENABLE_DOCS=true
-      - IS_TEST_ENV=True
-      - TARGET_PROJECT_ID=dummy-project
-      - TARGET_BUCKET=dummy_bucket
     ports:
       - "8003:8000"
     volumes:
