@@ -18,10 +18,6 @@ from service.logger import LoggerAdapter, configure_logger
 
 logger = LoggerAdapter(configure_logger(), None)
 
-def deduplicate_entities(data):
-
-    return []
-
 def read_validate_message_data(request):
     pass
 
@@ -50,3 +46,24 @@ def create_pydantic_validation_error_message(pydantic_exception: str) -> str:
     return (
         f"The following request parameters failed validation: {exceptions_list}"
     )
+
+def check_single_result_with_hash(results):
+    def make_hashable(value):
+        if isinstance(value, list):
+            return tuple(value)
+        return value
+
+    hashed_values = []
+
+    for item in results:
+        # Convert item to a dictionary excluding None values and get the values as a list
+        values = list(item.dict(exclude_none=True).values())
+
+        # Make values hashable by converting lists to tuples
+        hashable_values = [make_hashable(value) for value in values]
+
+        # Compute the hash of the tuple of hashable values
+        hashed_values.append(hash(tuple(hashable_values)))
+
+    # Check if all hashes are the same by converting to a set and checking its length
+    return len(set(hashed_values)) == 1

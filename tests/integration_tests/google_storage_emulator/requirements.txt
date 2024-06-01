@@ -1,1 +1,0 @@
-gcp-storage-emulator==v2022.06.11

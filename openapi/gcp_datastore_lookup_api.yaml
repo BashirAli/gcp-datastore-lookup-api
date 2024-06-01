@@ -131,7 +131,7 @@ components:
                 exception: 'Validation Error Occurred'
                 detail: "Body has no data"
 
-    NotFoundException:
+    DatastoreNotFoundException:
       description: Results not found exception
       content:
         application/json:
@@ -142,7 +142,7 @@ components:
               value:
                 exception: NotFound Exception
                 detail: "Entity not found using provided key"
-    InternalException:
+    InternalAPIException:
       description: Internal Exception
       content:
         application/json:
@@ -158,21 +158,21 @@ components:
     DatastoreEntityRequest:
       type: object
       properties:
-        datastore_key:
+        datastore_query:
           type: string
-          example: "192837465"
+          example: "{'account_id': 'x', 'postcode': 'AB1 CD2', 'first_name': 'John'}"
     DatastoreEntityMultipleRequest:
       type: object
       properties:
-        datastore_key:
+        datastore_query:
           type: string
-          example: "192837465"
+          example: "{'account_id': 'x', 'postcode': 'AB1 CD2', 'first_name': 'John'}"
     DatastoreEntityResponse:
       type: object
       properties:
         json_string_response_entity:
           type: string
-          example: "{'id': 'x', 'insertion_timestamp': ' 2024-04-25T11:11:55Z'}"
+          example: "{'account_id': 'x', 'insertion_timestamp': '2024-04-25T11:11:55Z'}"
     DatastoreEntityMultipleResponse:
       type: array
       items:
@@ -180,7 +180,7 @@ components:
         properties:
         json_string_response_entity:
           type: string
-          example: "{'id': 'x', 'insertion_timestamp': ' 2024-04-25T11:11:55Z'}"
+          example: "{'account_id': 'x', 'insertion_timestamp': '2024-04-25T11:11:55Z'}"
 
     ErrorResponse:
       type: object

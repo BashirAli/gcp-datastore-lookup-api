@@ -1,5 +1,5 @@
 from database import DatastoreClient
-from utils.helper import deduplicate_entities
+from utils.helper import check_single_result_with_hash
 
 def get_single_ds_entry( datastore_namespace, datastore_kind, request, pydantic_validation_model):
     datastore = DatastoreClient(datastore_namespace, datastore_kind)
@@ -12,9 +12,8 @@ def get_single_ds_entry( datastore_namespace, datastore_kind, request, pydantic_
     for entry in ds_entries:
         results.append(pydantic_validation_model(**entry))
 
-    results = deduplicate_entities(results)
-    if len(results) > 1:
-        raise Exception("something went wrong with deduplication")
+    if not check_single_result_with_hash(results):
+        raise DatastoreMultiResultException(f"Multiple entities found for query {request} in {datastore_namespace} store, there should only be one record. This needs to be fixed at ingestion level.")
 
     result = results[0]
 
