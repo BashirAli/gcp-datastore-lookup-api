@@ -18,7 +18,7 @@ from service.logger import LoggerAdapter, configure_logger
 
 logger = LoggerAdapter(configure_logger(), None)
 
-def read_validate_message_data(request):
+def read_validate_inbound_payload(request):
     pass
 
 

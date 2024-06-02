@@ -5,7 +5,7 @@ from utils.helper import create_pydantic_validation_error_message, format_pydant
 
 
 @patch("utils.helper.decode_pubsub_message_data")
-def test_read_validate_message_data(mock_decode):
+def test_read_validate_inbound_payload(mock_decode):
     # Configure the mock objects
     # example_data = {"bucket": "test_bucket", "name": "table"}
     # mock_decode.return_value = json.dumps(example_data)
@@ -19,7 +19,7 @@ def test_read_validate_message_data(mock_decode):
     #     )
     # )
     #
-    # result = read_validate_message_data(mock_request)
+    # result = read_validate_inbound_payload(mock_request)
     #
     # # Assert
     # mock_decode.assert_called_with(mock_request.message.data)
