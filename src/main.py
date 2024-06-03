@@ -8,6 +8,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
 from core.request import get_single_ds_entry, get_multiple_ds_entries
+from utils.helper import format_pydantic_validation_error_message, create_pydantic_validation_error_message
 from configuration.env import settings
 from error.custom_exceptions import (
     InternalAPIException,
@@ -63,7 +64,7 @@ async def get_entities(request: DatastoreEntityRequest):
 @api.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
     logger.error(msg="RequestValidation Error Occurred")
-    validation_exception = create_header_validation_error_message(exc.errors())
+    validation_exception = format_pydantic_validation_error_message(exc.errors())
     http_response = ErrorResponse(exception="Request Validation Error Occurred", detail=validation_exception)
     http_response_dict = http_response.model_dump(exclude_none=True)
     logger.info(msg=http_response_dict)
@@ -76,7 +77,7 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 @api.exception_handler(ModelValidationError)
 async def validation_exception_handler(request: Request, exc: ModelValidationError):
     logger.error(msg="ModelValidation Error Occurred")
-    validation_exception = create_validation_error_message(str(exc))
+    validation_exception = create_pydantic_validation_error_message(str(exc))
     http_response = ErrorResponse(exception="Request Validation Error Occurred", detail=validation_exception)
     http_response_dict = http_response.model_dump(exclude_none=True)
     logger.info(msg=http_response_dict)
